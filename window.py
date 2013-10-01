@@ -88,6 +88,7 @@ class ScoreEntryWindow(QtGui.QWidget):
 
         self.show()
 
+#TODO: move main into its own module...
 def main():
 
     app = QtGui.QApplication(sys.argv)
