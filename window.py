@@ -15,12 +15,12 @@ class MenuWindow(QtGui.QWidget):
 
         #Create Buttons
         #This will arbitrarily create buttons as they are added to this list.
-        btnArray = ['Run', 'Reset', 'Print', 'McDuffie']
-        btnDic = {}
+        btnArray = ['Run', 'Reset', 'Print']
+        self.btnDic = {}
         for btn in btnArray:
-            btnDic[btn] = QtGui.QPushButton(btn)
+            self.btnDic[btn] = QtGui.QPushButton(btn)
             #load into layout
-            hbox.addWidget(btnDic[btn])
+            hbox.addWidget(self.btnDic[btn])
 
         vbox = QtGui.QVBoxLayout()
         vbox.addLayout(hbox)
@@ -41,48 +41,37 @@ class ScoreEntryWindow(QtGui.QWidget):
         self.initUI()
 
     def initUI(self):
-        #Set number of students here.  Later, this will be moved onto the Frame
-        noStudents = 8
 
-        #layout for test 1
-        testScores1 = QtGui.QVBoxLayout()
-        testScores1.addWidget(QtGui.QLabel('Test 1'))
+        #layout for test
+        testScores = QtGui.QVBoxLayout()
+        testScores.addWidget(QtGui.QLabel('Enter Exam Scores'))
+        
+        #I switched it over to a QTextEdit.  We'll need parse out the score with \cr's, \t's or ,'s
+        self.scoresBox = QtGui.QTextEdit()
+        self.scoresBox.resize(100, 400)
+        testScores.addWidget(self.scoresBox)
+        #buttons
+        self.submitBtn = QtGui.QPushButton('Submit', self)
+        self.resetBtn = QtGui.QPushButton('Reset', self)
+        
+        self.resetBtn.clicked.connect(self.resetText)
 
-        #Dictionary to hold widgets
-        scoreDic1 = {}
-
-        i = 0
-        while i < noStudents:
-            #I'm not really sure that I need the 'Score' part...
-            #but I think that it may become more readable with it.
-            #I should probably turn it into an array and just use i as the index
-            scoreDic1['Score' + str(i)] = QtGui.QLineEdit()
-            testScores1.addWidget(scoreDic1['Score' + str(i)])
-            i = i + 1
-        testScores1.addStretch(1)
-
-
-        #Same as above but with the second set of test scores.
-        #I probably should combine both into one dictionary
-        testScores2 = QtGui.QVBoxLayout()
-        testScores2.addWidget(QtGui.QLabel('Test 2'))
-
-        i = 0
-
-        scoreDic2 = {}
-        while i < noStudents:
-            scoreDic2['Score' + str(i)] = QtGui.QLineEdit()
-            testScores2.addWidget(scoreDic2['Score' + str(i)])
-            i = i + 1
-        testScores2.addStretch(1)
+        btnBar = QtGui.QHBoxLayout()
+        btnBar.addStretch(1)
+        btnBar.addWidget(self.submitBtn)
+        btnBar.addWidget(self.resetBtn)
+        testScores.addLayout(btnBar)
+        testScores.addStretch(1)
 
         hbox = QtGui.QHBoxLayout()
-        hbox.addLayout(testScores1)
-        hbox.addLayout(testScores2)
+        hbox.addLayout(testScores)
 
         self.setLayout(hbox)
-        self.setGeometry(505, 100, 250, 400) #Figure out how to auto set the height
+        self.setGeometry(505, 100, 250, 200) #Figure out how to auto set the height
         self.setWindowTitle('Student Scores')
 
         self.show()
+    
+    def resetText(self):
+        self.scoresBox.setText('')
 
