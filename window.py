@@ -1,4 +1,3 @@
-import sys
 from PyQt4 import QtGui
 
 class MenuWindow(QtGui.QWidget):
@@ -16,13 +15,12 @@ class MenuWindow(QtGui.QWidget):
 
         #Create Buttons
         #This will arbitrarily create buttons as they are added to this list.
-        btnArray = ['Run', 'Reset', 'Print']
+        btnArray = ['Run', 'Reset', 'Print', 'McDuffie']
         btnDic = {}
         for btn in btnArray:
             btnDic[btn] = QtGui.QPushButton(btn)
             #load into layout
             hbox.addWidget(btnDic[btn])
-
 
         vbox = QtGui.QVBoxLayout()
         vbox.addLayout(hbox)
@@ -88,16 +86,3 @@ class ScoreEntryWindow(QtGui.QWidget):
 
         self.show()
 
-#TODO: move main into its own module...
-def main():
-
-    app = QtGui.QApplication(sys.argv)
-    #I would eventually like to tether these both into the same window, but for now they're separate
-    ex1 = ScoreEntryWindow()
-    ex2 = MenuWindow()
-    #When the report window is created, I would like to keep that separated.
-    sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    main()
