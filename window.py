@@ -2,27 +2,21 @@ import sys
 from PyQt4 import QtGui
 
 class Main_Window(QtGui.QWidget):
-    """
-        This is the main window for the, housing all controls and info
-    """
+    "This is the main window for the, housing all controls and info"
     
     def __init__(self):
-        "Initialize the window"
         super(Main_Window, self).__init__()
         self.data_array = []
         self.initUi()
     
     def initUi(self):
-
-        """The Ui layout.  All buttons and widgets need to be 'selfed', but
-        let's leave the methods out of this thing..."""
-
+        "This includes both the layout and sets bindings for this window"
     ##Layout
         btn_box = QtGui.QHBoxLayout()
         btn_box.addStretch(1)
 
-        self.open_score_frame_btn = QtGui.QPushButton('Enter Scores')
-        btn_box.addWidget(self.open_score_frame_btn)
+        self.ent_scrs_btn = QtGui.QPushButton('Enter Scores')
+        btn_box.addWidget(self.ent_scrs_btn)
 
         wndw_box = QtGui.QVBoxLayout()
         wndw_box.addStretch(1)
@@ -34,46 +28,23 @@ class Main_Window(QtGui.QWidget):
         self.show()
         
     ##Bindings
-        self.open_score_frame_btn.clicked.connect(self.open_score_frame)
+        self.ent_scrs_btn.clicked.connect(self.open_score_frame)
     
     def open_score_frame(self):
+        "Opens the frame where scores are entered"
         self.score_frame = Score_Frame()
-        self.score_frame.sub_btn.clicked.connect(self.append_data)
-        self.score_frame.rst_btn.clicked.connect(self.reset_text)
+        sf = self.score_frame #alias
+        sf.sub_btn.clicked.connect(self.append_data)
+        sf.rst_btn.clicked.connect(self.reset_text)
     
     def append_data(self):
-
+        "Add score frame data to the master data array"
         scores_string = str(self.score_frame.score_entry_box.toPlainText())
 
-        """"I'm using the array below to hold any punctuation marks I want to 
-        remove.  It's not the most readable way of doing this, but I want to
-        be able to add and remove marks easily."""
-        punc_array = [',', ';'] 
-        for punc in punc_array:
-            scores_string = scores_string.replace(punc, ' ')
-
-        scores_array = scores_string.split()
-        cleaned_array = []
-        not_accepted = 0
-        not_accepted_array = []
-        for score in scores_array:
-            if score.replace('.', '').replace('-','').isdigit():
-                cleaned_array.append(float(score))
-            else:
-                not_accepted += 1
-                not_accepted_array.append(score)
-
-        if not_accepted > 0:
-            "Tell the user which scores didn't make it in"
-            QtGui.QMessageBox.about(self,
-                                    'Invalid Scores',
-                                    'Not all scores were accepted: %s'
-                                    % ', '.join(not_accepted_array))
                 
         scores_dict = {}
-        scores_dict['scores'] = cleaned_array
-        
-        
+        scores_dict['scores'] = clean_scores_string(self, scores_string)
+
         #Insert the date
         date = self.score_frame.cal.selectedDate()
         scores_dict['date'] = date
@@ -84,6 +55,7 @@ class Main_Window(QtGui.QWidget):
         print self.data_array[len(self.data_array)-1]['scores']
     
     def reset_text(self):
+        "Resets score entry box text to an empty string"
         self.score_frame.score_entry_box.setText('')
 
 class Score_Frame(QtGui.QWidget):
@@ -97,8 +69,9 @@ class Score_Frame(QtGui.QWidget):
         self.initUi()
 
     def initUi(self):
-        """The Ui layout.  All buttons and widgets need to be 'selfed', but
-        let's leave the methods out of this thing..."""
+        """
+        The UI layout.  Bindings should be present in the Main_Window Class.
+        """
 
         wndw_box = QtGui.QVBoxLayout()
 
@@ -129,4 +102,36 @@ class Score_Frame(QtGui.QWidget):
         self.setGeometry(100, 100, 300, 550)
         self.setWindowTitle('Enter Scores')
         self.show()
+
+def sort_array(scores_string):
+    "Puts cleaned string into float array"
+    punc_array = [',', ';'] 
+    for punc in punc_array:
+        scores_string = scores_string.replace(punc, ' ')
+
+    scores_array = scores_string.split()
+    clean_array = []
+    num_reject = 0
+    reject_array = []
+    for score in scores_array:
+        temp_string = score.replace('.', '').replace('-', '')
+        if temp_string.isdigit():
+            clean_array.append(float(score))
+        else:
+            num_reject += 1
+            reject_array.append(score)
+    
+    return num_reject, reject_array, clean_array
+
+def clean_scores_string(self, scores_string):
+    "notifies user of any unacepted data"
+    num_reject, reject_array, clean_array = sort_array(scores_string)
+
+    if num_reject > 0:
+        "Tell the user which scores didn't make it in"
+        QtGui.QMessageBox.about(self,
+                                'Invalid Scores',
+                                '%d score(s) rejected: %s'
+                                % (num_reject, ', '.join(reject_array)))
+    return clean_array
 
