@@ -1,6 +1,10 @@
 ScoreComparer
 =============
 
+##v0.11
+- Logic for Score window is now found in the main window object
+- Added Calendar.  Date is stored in dictionary under 'date' as QDate
+
 ##v0.1
 - Two windows are produced
 - Funcional reset button on score window
@@ -8,6 +12,4 @@ ScoreComparer
 
 ##Planned features for v0.2
 - Print QTextEdit to the MenuWindow in some form
-- Add Calendar widge to the Score Window and return selected date
-- Add the score window object to the menu window
 - Make the score window modal
