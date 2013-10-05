@@ -13,19 +13,21 @@ class MenuWindow(QtGui.QWidget):
 
     #Window Properties
     def initUI(self):
+
         #Make layout to hold btns
         hbox = QtGui.QHBoxLayout()
         hbox.addStretch(1)
-
-        #Create Buttons
-        #This will arbitrarily create buttons as they are added to this list.
-        btnArray = ['Run', 'Reset', 'Print']
-        self.btnDic = {}
-        for btn in btnArray:
-            self.btnDic[btn] = QtGui.QPushButton(btn)
-            #load into layout
-            hbox.addWidget(self.btnDic[btn])
-
+        
+        #***************************************************
+        #                 Score Box                        
+        # I want to move all functionality for the score-box
+        # to here.  This should fix some problems I have with
+        # passing variables.
+        #***************************************************
+        self.score_entry_btn = QtGui.QPushButton('Enter Scores')
+        hbox.addWidget(self.score_entry_btn)
+        self.score_entry_btn.clicked.connect(self.open_score_box)
+        
         vbox = QtGui.QVBoxLayout()
         vbox.addLayout(hbox)
         vbox.addStretch(1)
@@ -36,6 +38,11 @@ class MenuWindow(QtGui.QWidget):
         self.setWindowTitle('TapTap')
 
         self.show()
+    
+    def open_score_box(self):
+        self.score_entry_box = ScoreEntryWindow()
+        
+    def
 
 class ScoreEntryWindow(QtGui.QWidget):
     """
