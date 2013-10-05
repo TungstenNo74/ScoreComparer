@@ -43,7 +43,7 @@ class Main_Window(QtGui.QWidget):
 
                 
         scores_dict = {}
-        scores_dict['scores'] = clean_scores_string(self, scores_string)
+        scores_dict['scores'] = notify_rejection(self, scores_string)
 
         #Insert the date
         date = self.score_frame.cal.selectedDate()
@@ -123,7 +123,7 @@ def sort_array(scores_string):
     
     return num_reject, reject_array, clean_array
 
-def clean_scores_string(self, scores_string):
+def notify_rejection(self, scores_string):
     "notifies user of any unacepted data"
     num_reject, reject_array, clean_array = sort_array(scores_string)
 
