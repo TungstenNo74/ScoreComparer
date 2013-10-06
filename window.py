@@ -18,11 +18,16 @@ class Main_Window(QtGui.QWidget):
         self.ent_scrs_btn = QtGui.QPushButton('Enter Scores')
         btn_box.addWidget(self.ent_scrs_btn)
 
-        wndw_box = QtGui.QVBoxLayout()
-        wndw_box.addStretch(1)
-        wndw_box.addLayout(btn_box)
+        self.wndw_box = QtGui.QVBoxLayout()
+        self.wndw_box.addStretch(1)
+        self.wndw_box.addLayout(btn_box)
+
+        self.dataBox = QtGui.QTextEdit()
+        self.dataBox.setReadOnly(True)
+        self.dataBox.setText('<html><h2>No Data...</h2></html>')
+        self.wndw_box.addWidget(self.dataBox)
         
-        self.setLayout(wndw_box)
+        self.setLayout(self.wndw_box)
         self.setGeometry(100, 100, 400, 50)
         self.setWindowTitle('TapTap')
         self.show()
@@ -51,8 +56,24 @@ class Main_Window(QtGui.QWidget):
         self.score_frame.close()
 
         self.data_array.append(scores_dict)
+        self.display_data()
         print self.data_array[len(self.data_array)-1]['date']
         print self.data_array[len(self.data_array)-1]['scores']
+        
+    def display_data(self):
+        "Displays data contained in data_array"
+        examString = ''
+        for exam in self.data_array:
+            examString += '<html><h3>' 
+            examString += exam['date'].toString('MMM d, yyyy') 
+            examString += '</h3></html>: '
+            for score in exam['scores']:
+                examString += str(score) + ', '
+            examString = examString[:-2]
+            #examString += '<html><br /></html> '
+        self.dataBox.setText(examString)
+
+
     
     def reset_text(self):
         "Resets score entry box text to an empty string"
